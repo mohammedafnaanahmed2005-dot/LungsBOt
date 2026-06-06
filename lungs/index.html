@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PulmoAgent — Interactive Pulmonary Pathogens &amp; Pharmacology Academy</title>
+  <meta name="description" content="An interactive educational platform for students and medical professionals to explore pulmonary pathogens, respiratory pharmacology, and clinical case simulations with synthesized lung sounds." />
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+
+  <!-- Background FX layers -->
+  <div class="bg-grid"></div>
+  <div class="bg-radial"></div>
+
+  <div id="app">
+
+    <!-- ====== HEADER ====== -->
+    <header class="header">
+      <div class="logo">
+        <div class="logo-icon">🫁</div>
+        <div class="logo-text">PULMO<span>AGENT</span></div>
+      </div>
+      <div class="header-right">
+        <div class="mode-toggle" id="modeToggle">
+          <div class="mode-toggle__label active" data-mode="student">🎓 Student</div>
+          <div class="mode-toggle__label" data-mode="medical">🩺 Medical</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ====== NAVIGATION TABS ====== -->
+    <nav class="nav-tabs" id="navTabs">
+      <button class="nav-tab active" data-tab="atlas">🫁 Lung Atlas</button>
+      <button class="nav-tab" data-tab="matcher">💊 Drug Matcher</button>
+      <button class="nav-tab" data-tab="cases">🔬 Case Simulator</button>
+      <button class="nav-tab" data-tab="video">🎥 Video Academy</button>
+    </nav>
+
+    <!-- ====== MAIN CONTENT ====== -->
+    <main class="main-content">
+
+      <!-- ===== TAB 1: INTERACTIVE LUNG ATLAS ===== -->
+      <section class="section-panel active" id="panel-atlas">
+        <div class="section-title">Interactive Module</div>
+        <h1 class="section-heading">Lung Anatomy Atlas</h1>
+        <p class="section-desc">Click on any lobe to explore the pathogens that typically infect that region, including their microbiology, clinical presentation, and auscultation findings.</p>
+
+        <div class="atlas-layout">
+          <!-- Left: SVG lungs -->
+          <div class="glass-card lung-svg-container">
+            <svg id="lungSvg" viewBox="0 0 400 440" class="lung-breathe" xmlns="http://www.w3.org/2000/svg">
+              <!-- Trachea -->
+              <rect x="188" y="10" width="24" height="70" rx="8" fill="rgba(0,242,254,0.12)" stroke="var(--primary)" stroke-width="1.2"/>
+              <!-- Main bronchi -->
+              <line x1="200" y1="80" x2="140" y2="130" stroke="var(--primary)" stroke-width="1.2" opacity="0.5"/>
+              <line x1="200" y1="80" x2="260" y2="130" stroke="var(--primary)" stroke-width="1.2" opacity="0.5"/>
+
+              <!-- ===== LEFT LUNG (viewer's right) ===== -->
+              <!-- Left Upper Lobe -->
+              <path class="lung-lobe" id="lobe-left-upper"
+                d="M 100,120 Q 60,140 45,200 Q 40,230 55,260 L 120,230 Q 135,190 130,150 Q 125,125 100,120 Z"
+                data-lobe="left-upper" data-label="Left Upper Lobe" />
+              <!-- Left Lower Lobe -->
+              <path class="lung-lobe" id="lobe-left-lower"
+                d="M 55,260 Q 35,290 30,340 Q 28,380 55,410 Q 85,435 120,420 Q 145,405 150,370 Q 155,320 135,270 L 120,230 Z"
+                data-lobe="left-lower" data-label="Left Lower Lobe" />
+
+              <!-- ===== RIGHT LUNG (viewer's left) ===== -->
+              <!-- Right Upper Lobe -->
+              <path class="lung-lobe" id="lobe-right-upper"
+                d="M 300,120 Q 340,140 355,200 Q 360,230 345,250 L 280,230 Q 265,190 270,150 Q 275,125 300,120 Z"
+                data-lobe="right-upper" data-label="Right Upper Lobe" />
+              <!-- Right Middle Lobe -->
+              <path class="lung-lobe" id="lobe-right-middle"
+                d="M 345,250 Q 355,270 355,295 L 290,290 L 280,230 Z"
+                data-lobe="right-middle" data-label="Right Middle Lobe" />
+              <!-- Right Lower Lobe -->
+              <path class="lung-lobe" id="lobe-right-lower"
+                d="M 355,295 Q 370,330 370,370 Q 365,410 335,425 Q 305,438 275,420 Q 250,405 245,370 Q 240,330 255,290 L 290,290 Z"
+                data-lobe="right-lower" data-label="Right Lower Lobe" />
+
+              <!-- Lobe labels -->
+              <text x="80" y="195" fill="rgba(0,242,254,0.5)" font-size="9" font-family="var(--font-mono)" text-anchor="middle">LUL</text>
+              <text x="90" y="350" fill="rgba(0,242,254,0.5)" font-size="9" font-family="var(--font-mono)" text-anchor="middle">LLL</text>
+              <text x="320" y="195" fill="rgba(0,242,254,0.5)" font-size="9" font-family="var(--font-mono)" text-anchor="middle">RUL</text>
+              <text x="325" y="270" fill="rgba(0,242,254,0.5)" font-size="9" font-family="var(--font-mono)" text-anchor="middle">RML</text>
+              <text x="310" y="365" fill="rgba(0,242,254,0.5)" font-size="9" font-family="var(--font-mono)" text-anchor="middle">RLL</text>
+
+              <!-- Heart silhouette (central) -->
+              <ellipse cx="200" cy="310" rx="35" ry="50" fill="rgba(255,0,127,0.06)" stroke="rgba(255,0,127,0.15)" stroke-width="1"/>
+              <text x="200" y="315" fill="rgba(255,0,127,0.3)" font-size="9" font-family="var(--font-mono)" text-anchor="middle">Heart</text>
+            </svg>
+          </div>
+
+          <!-- Right: Detail sidebar -->
+          <div class="glass-card atlas-detail" id="atlasDetail">
+            <div class="atlas-detail__placeholder" id="atlasPlaceholder">
+              <div class="atlas-detail__placeholder-icon">🔍</div>
+              <div class="atlas-detail__placeholder-text">Select a lung lobe to explore<br/>its associated pathogens</div>
+            </div>
+            <div id="atlasContent" class="hidden"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== TAB 2: PATHOGEN & DRUG MATCHER ===== -->
+      <section class="section-panel" id="panel-matcher">
+        <div class="section-title">Pharmacology Module</div>
+        <h1 class="section-heading">Pathogen ↔ Drug Matcher</h1>
+        <p class="section-desc">Select a pathogen on the left to see its matching drug(s) on the right. Explore each drug's mechanism and clinical target. Switch modes for detailed or simplified views.</p>
+
+        <div class="matcher-layout">
+          <!-- Pathogen List -->
+          <div class="glass-card">
+            <div class="detail-section-label">Pulmonary Pathogens</div>
+            <div class="matcher-list" id="matcherPathogenList"></div>
+          </div>
+
+          <!-- Drug Detail / Matches -->
+          <div class="glass-card matcher-detail" id="matcherDetail">
+            <div class="atlas-detail__placeholder" id="matcherPlaceholder">
+              <div class="atlas-detail__placeholder-icon">💊</div>
+              <div class="atlas-detail__placeholder-text">Select a pathogen to see<br/>its targeted drug therapy</div>
+            </div>
+            <div id="matcherContent" class="hidden"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== TAB 3: CLINICAL CASE SIMULATOR ===== -->
+      <section class="section-panel" id="panel-cases">
+        <div class="section-title">Clinical Simulation</div>
+        <h1 class="section-heading">Case Simulator</h1>
+        <p class="section-desc">Work through realistic clinical scenarios. Listen to synthesized lung sounds, review imaging, and diagnose the causative pathogen.</p>
+
+        <!-- Case Selector Row -->
+        <div class="case-header-bar">
+          <div class="case-selector" id="caseSelector"></div>
+          <div class="score-display">
+            SCORE: <span class="score-number" id="scoreDisplay">0 / 0</span>
+          </div>
+        </div>
+
+        <!-- Active Case Content -->
+        <div id="caseContent"></div>
+      </section>
+
+      <!-- ===== TAB 4: VIDEO ACADEMY ===== -->
+      <section class="section-panel" id="panel-video">
+        <div class="section-title">Learning Module</div>
+        <h1 class="section-heading">Video Academy</h1>
+        <p class="section-desc">Watch an animated walkthrough of lung anatomy, pathogen infection sites, and auscultation findings — with synchronized lung sounds and real-time highlights.</p>
+
+        <div class="video-player-hud">
+          <!-- Video Viewport -->
+          <div class="video-viewport" id="videoViewport">
+            <div class="video-frame" id="videoFrame">
+              <img src="lungs_3d.jpg" alt="3D Lung Scan" class="video-img" id="videoImg1" />
+              <img src="lobes_anatomy.jpg" alt="Lung Lobes Anatomy" class="video-img" id="videoImg2" />
+              <!-- Animated overlay markers -->
+              <div class="video-overlay" id="videoOverlay">
+                <div class="scan-line" id="scanLine"></div>
+                <div class="lobe-marker" id="marker-rul" data-label="RUL">RUL</div>
+                <div class="lobe-marker" id="marker-rml" data-label="RML">RML</div>
+                <div class="lobe-marker" id="marker-rll" data-label="RLL">RLL</div>
+                <div class="lobe-marker" id="marker-lul" data-label="LUL">LUL</div>
+                <div class="lobe-marker" id="marker-lll" data-label="LLL">LLL</div>
+              </div>
+              <!-- Chapter title overlay -->
+              <div class="video-chapter-title" id="videoChapterTitle"></div>
+            </div>
+            <!-- Subtitle bar -->
+            <div class="video-subtitle-bar" id="videoSubtitleBar">
+              <span id="videoSubtitleText">Press Play to begin the learning journey</span>
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <div class="video-controls">
+            <button class="video-btn video-btn--play" id="videoPlayBtn">
+              <span class="play-icon" id="playIcon">▶</span>
+            </button>
+            <div class="video-time" id="videoTimeElapsed">0:00</div>
+            <div class="video-progress-wrap" id="videoProgressWrap">
+              <div class="video-progress-track">
+                <div class="video-progress-fill" id="videoProgressFill"></div>
+                <div class="video-progress-thumb" id="videoProgressThumb"></div>
+              </div>
+              <!-- Chapter ticks -->
+              <div class="video-chapter-ticks" id="videoChapterTicks"></div>
+            </div>
+            <div class="video-time" id="videoTimeDuration">0:36</div>
+            <div class="video-speed" id="videoSpeedBtn">1×</div>
+            <button class="video-btn video-btn--vol" id="videoVolBtn">🔊</button>
+          </div>
+
+          <!-- Chapter list -->
+          <div class="video-chapters-row" id="videoChaptersRow"></div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="footer">
+      <div class="footer-brand">PULMO<span>AGENT</span>.edu</div>
+      <div class="footer-sub">Interactive Pulmonary Pathogens &amp; Pharmacology Academy &bull; For educational purposes only</div>
+    </footer>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
